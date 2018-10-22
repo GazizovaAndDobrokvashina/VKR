@@ -4,8 +4,8 @@ import pymorphy2
 morph = pymorphy2.MorphAnalyzer()
 
 chapter = Parser()
-chapter.ParseToBeuty()
-chapter.printIt()
+chapter.parse_to_beuty()
+chapter.print_it()
 
 
 

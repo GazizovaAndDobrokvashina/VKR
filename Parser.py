@@ -17,43 +17,62 @@ class Parser:
                     "артефакта. "
         self.chapter = Chapter('')
 
-    def setText(self, text):
+    def set_text(self, text):
         self.text = text
 
-    def ParseToBeuty(self):
+    def parse_to_beuty(self):
         self.chapter = Chapter('First')
         sentence = Sentence()
         word = ''
-        wordEnd = False
-        sentenceEnd = False
+        new_word = ''
+        word_end = False
+        sentence_end = False
         for i in self.text:
-            if i == '.':
-                sentenceEnd = True
-                self.chapter.AddSentence(sentence)
-                sentence = Sentence()
+            if sentence_end:
+                if i == ('.' or '!' or '?'):
+                    word += i
+                else:
+                    sentence.addWord(Word(word))
+                    self.chapter.AddSentence(sentence)
+                    sentence = Sentence()
+                    word = ''
+                    sentence_end = False
+                    continue
+
+            if word_end:
+                if not i == ' ':
+                    word += new_word
+                else:
+                    sentence.addWord(Word(word))
+                    word = new_word
+                word_end = False
+
+            if i == ('.' or '!' or '?'):
+                sentence_end = True
+                sentence.addWord(Word(word))
+                word = i
             elif i == ' ':
-                wordEnd = True
                 sentence.addWord(Word(word))
                 word = ''
             elif 'PNCT' in morph.parse(i)[0].tag:
-                wordEnd = True
-                sentence.addWord(Word(word))
-                word = ''
-                newWord = i
+                word_end = True
+                new_word = i
             else:
                 word += i
 
-
         return self.chapter
 
-    def printIt(self):
+    def print_it(self):
         out = ''
         for sentence in self.chapter.sentences:
             for word in sentence.words:
                 if 'PNCT' not in word.type.tag:
                     out += ' '
                 if word.pos == 'NPRO':
-                    out += word.word + '(' + word.mestMean.word + ')'
+                    if not word.mestMean == '':
+                        out += word.word + '(' + word.mestMean.word + ')'
+                    else:
+                        out += word.word + '()'
                 else:
                     out += word.word
 

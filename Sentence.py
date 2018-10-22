@@ -7,7 +7,6 @@ class Sentence:
     def __init__(self):
         self.words = list()
         self.mests = list()
-        # self.lastMest = Word('')
         self.NoDefMest = False
         self.lastNoun = Word('')
         self.HasLast = False
