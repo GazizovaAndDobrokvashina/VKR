@@ -32,8 +32,8 @@ class Parser:
                 if i == ('.' or '!' or '?'):
                     word += i
                 else:
-                    sentence.addWord(Word(word))
-                    self.chapter.AddSentence(sentence)
+                    sentence.add_word(Word(word))
+                    self.chapter.add_sentence(sentence)
                     sentence = Sentence()
                     word = ''
                     sentence_end = False
@@ -43,16 +43,16 @@ class Parser:
                 if not i == ' ':
                     word += new_word
                 else:
-                    sentence.addWord(Word(word))
+                    sentence.add_word(Word(word))
                     word = new_word
                 word_end = False
 
             if i == ('.' or '!' or '?'):
                 sentence_end = True
-                sentence.addWord(Word(word))
+                sentence.add_word(Word(word))
                 word = i
             elif i == ' ':
-                sentence.addWord(Word(word))
+                sentence.add_word(Word(word))
                 word = ''
             elif 'PNCT' in morph.parse(i)[0].tag:
                 word_end = True
@@ -70,7 +70,7 @@ class Parser:
                     out += ' '
                 if word.pos == 'NPRO':
                     if not word.mestMean == '':
-                        out += word.word + '(' + word.mestMean.word + ')'
+                        out += word.word + '(1)'# + word.mestMean.word + ')'
                     else:
                         out += word.word + '()'
                 else:
