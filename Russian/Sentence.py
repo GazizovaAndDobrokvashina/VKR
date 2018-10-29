@@ -1,6 +1,4 @@
-import pymorphy2
-from Word import Word
-import numpy as np
+from Russian.Word import Word
 
 
 class Sentence:

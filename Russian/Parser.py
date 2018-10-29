@@ -1,6 +1,6 @@
-from Word import Word
-from Sentence import Sentence
-from Chapter import Chapter
+from Russian.Word import Word
+from Russian.Sentence import Sentence
+from Russian.Chapter import Chapter
 import pymorphy2
 
 morph = pymorphy2.MorphAnalyzer()
