@@ -9,8 +9,8 @@ import sqlite3
 
 conn = sqlite3.connect('example.db')
 actors = Actors(conn)
-conn.commit()
-actors.add_actor('mc', 'mc, Azazell')
+# conn.commit()
+# actors.add_actor('mc', 'mc, Azazell') - уже записано в таблицу
 conn.commit()
 print(actors.get_actors())
 
