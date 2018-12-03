@@ -1,6 +1,6 @@
 from textblob import TextBlob
-import Pretexts
-from SyntaxPart import SyntaxPart
+import VKR.Pretexts
+from VKR.SyntaxPart import SyntaxPart
 import numpy as np
 
 

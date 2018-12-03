@@ -1,5 +1,5 @@
-from TextParser import TextParser
-from Actors import Actors
+from VKR.TextParser import TextParser
+from VKR.Actors import Actors
 import sqlite3
 
 
