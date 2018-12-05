@@ -1,12 +1,16 @@
 from VKR.Russian.Parser import Parser
+from VKR.Russian.Reader import Reader
 
 import pymorphy2
 morph = pymorphy2.MorphAnalyzer()
 
-chapter = Parser()
-chapter.chapter.showGraph()
-# chapter.parse_to_beuty()
-# chapter.print_it()
+reader = Reader("test.txt")
+parser = Parser(reader.get_text())
+parser.chapter.showGraph()
+
+# print(parser.actors)
+# print(parser.db.get_actors())
+
 
 
 

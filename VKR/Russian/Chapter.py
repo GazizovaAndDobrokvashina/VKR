@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 class Chapter:
 
-    def __init__(self, name, text):
+    def __init__(self, name, text, actors):
         self.name = name
         self.sentences = list()
         noise = ['...', '.', '?', '!']
@@ -23,7 +23,7 @@ class Chapter:
         id = 0
         for snt in sentens:
             if len(snt) > 1:
-                self.sentences.append(Sentence(snt, id))
+                self.sentences.append(Sentence(snt, id, actors))
                 id += 1
 
     def showGraph(self):
