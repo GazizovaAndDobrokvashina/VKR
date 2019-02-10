@@ -11,8 +11,11 @@ class Artifacts:
         nams = str(names)
         # print(nams)
         self.actors_db = self.conn.cursor()
-        self.actors_db.execute('INSERT INTO Artifacts(base_name, nams) VALUES (?,?)', (base_name, nams))
-        self.conn.commit()
+        self.actors_db.execute('SELECT * FROM Artifacts WHERE base_name = ?', (base_name,))
+        res = self.actors_db.fetchall()
+        if len(res) == 0:
+            self.actors_db.execute('INSERT INTO Artifacts(base_name, nams) VALUES (?,?)', (base_name, nams))
+            self.conn.commit()
 
     def get_artifacts(self):
         actors = list()

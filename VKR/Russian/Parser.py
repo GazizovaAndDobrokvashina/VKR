@@ -1,4 +1,4 @@
-from VKR.Russian.Sentence import Sentence
+from VKR.Russian.ExceptAndSeq import ExceptAndSeq
 from VKR.Russian.Chapter import Chapter
 from VKR.Russian.Actors import Actors
 from VKR.Russian.Artifacts import Artifacts
@@ -18,12 +18,6 @@ class Parser:
         self.actors = {}
         self.artifacts = {}
         if self.text == 0:
-            # self.text = "Конюх чистит коня в конюшне. " \
-            #         "Наездник пришел в конюшню за конем. " \
-            #         "Наездник на коне поехал в таверну. " \
-            #         "Конюх пешком пошел в таверну. " \
-            #         "Наездник подрался с конюхом в таверне."
-            # self.chapter = Chapter('ТЕСТ', self.text)
             print("NO TEXT ADDED")
         else:
             no_name = True
@@ -36,7 +30,7 @@ class Parser:
                     self.acDB = Actors(self.conn)
                     self.arDB = Artifacts(self.conn)
                     no_name = False
-                if line == "Главные герои\n":
+                if line == "Персонажи\n":
                     next_persons = True
                     continue
                 elif line == "Артефакты\n":
@@ -78,43 +72,10 @@ class Parser:
             for key in self.artifacts:
                 self.arDB.add_artifact(key, self.artifacts[key])
 
-    def parse_names(self, names):
-        words = names.split()
-        nams = []
-        adjectives = []
-        nouns = []
-        for word in words:
-
-            typ = morph.parse(word)[0]
-            pos = typ.tag.POS
-            add_case = False
-            if word == ' ':
-                continue
-            if word == "который" or word == "которое" or word == "которая":
-                add_case = True
-            elif pos == 'ADJF' or pos == 'ADJS' or pos == 'PRTF' or pos == 'PRTS':
-                adjectives.append(typ.inflect({'sing', 'nomn'}).word)
-            elif pos == 'NOUN' and ((add_case and typ.tag.case == 'ablt') or typ.tag.case == 'nomn' or typ.tag.case == 'gent'):
-                nouns.append(typ.normal_form)
-            elif pos == 'NOUN' and typ.tag.case == 'nomn':
-                nouns.append(typ.normal_form)
-                add_case = True
-            elif typ.tag == morph.parse("Азазель.")[0].tag or word.lower() == "кость" and word.lower() not in nams:
-                nams.append(word.lower())
-                add_case = True
-        # print(adjectives)
-        # print(nouns)
-        for noun in nouns:
-            nams.append(noun)
-        for adj in adjectives:
-            for noun in nouns:
-                nams.append(adj + ' ' + noun)
-
-        return nams
-
     def parse_words(self, words):
         words = words.split()
         noise = [',', ':', '\n']
+        voc = ExceptAndSeq()
         clear_words = []
         for word in words:
             for n in noise:
@@ -123,7 +84,7 @@ class Parser:
 
         types = [morph.parse(word)[0] for word in clear_words]
 
-        exeptions = {'кость': ['NOUN', 'кость'], 'рыжий': ['ADJF', 'рыжий'], 'молодой': ['ADJF', 'молодой']}
+        exeptions = voc.get_exceptions()
 
         for index in range(len(clear_words)):
             if clear_words[index] in exeptions.keys():
@@ -133,11 +94,10 @@ class Parser:
                         types[index] = typ
                         break
 
-        search_for = [[['ADJF', 0], ['NOUN', 0]],
-                      [['NOUN', 0], ['NOUN', 1]],
-                      [['NOUN', 0], ['ADJF', 1], ['NOUN', 1]],
-                      [['ADJF', 0], ['ADJF', 0], ['NOUN', 0]],
-                      [['NOUN', 0]]]
+        # print(clear_words)
+        # print(types)
+
+        search_for = voc.get_sequences()
 
         result = []
         for seq in search_for:
@@ -148,10 +108,12 @@ class Parser:
                 name = clear_words[i:i+len(seq)]
                 res = ''
                 for i in range(len(seq)):
-                    res+= name[i] + ' '
+                    res += name[i] + ' '
+                res = res[:-1]
                 result.append(res)
                 if len(nums) > 1:
                     noun =  name[noun_place]
+                    result.append(noun)
                     for i in nums:
                         add = name[i] + ' ' + noun
                         result.append(add)
@@ -211,12 +173,10 @@ class Parser:
             founds.remove(founds[i-n])
             indexes.remove(indexes[i-n])
             n+=1
-        print(sequence)
-        print(founds)
-        print()
+        # print(sequence)
+        # print(founds)
+        # print()
 
         return indexes
-
-
 
 
