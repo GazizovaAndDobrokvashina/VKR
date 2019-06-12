@@ -173,9 +173,6 @@ class Parser:
             founds.remove(founds[i-n])
             indexes.remove(indexes[i-n])
             n+=1
-        # print(sequence)
-        # print(founds)
-        # print()
 
         return indexes
 

@@ -34,43 +34,6 @@ class Chapter:
 
 
 
-    def showGraph(self):
-
-        dict = {}
-        for sentense in self.sentences:
-            for i in sentense.nouns:
-                for j in sentense.nouns[sentense.nouns.index(i):]:
-                    if i==j:
-                        continue
-                    if (i,j) not in dict and (j,i) not in dict:
-                        dict[(i,j)] = []
-                        dict[(i, j)].append(sentense.id + 1)
-                    elif (i,j) in dict:
-                        dict[(i, j)].append(sentense.id + 1)
-                    else:
-                        dict[(j, i)].append(sentense.id + 1)
-
-        # print(dict.items())
-
-        G = nx.Graph()
-        labels = {}
-        for e, p in dict.items():
-            G.add_edge(*e)
-            labels[e] = str(p)
-
-        pos = nx.spring_layout(G)
-
-        nx.draw(G, pos, with_labels=True, node_size=20,
-                             node_color='black',
-                             font_size=10,
-                             font_color='red'
-                )
-        nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, font_size=10)
-
-        plt.show()
-
-    # пошла жара, определяем что где есть)
-
     def parse_nouns(self, words, actors, artifacts):
         nouns=[]
         words = words.split()
@@ -120,23 +83,41 @@ class Chapter:
                         if base not in nouns:
                             nouns.append(base)
 
-            # for i in indexes:
-            #     name = clear_words[i:i+len(seq)]
-            #     res = ''
-            #     for j in range(len(seq)):
-            #         res+= name[j] + ' '
-            #     print(res)
-            #     for base, names in actors.items():
-            #         if res in names:
-            #             if base not in nouns:
-            #                 nouns.append(base)
-            #
-            #     for base, names in artifacts.items():
-            #         if res in names:
-            #             if base not in nouns:
-            #                 nouns.append(base)
-        print(words, nouns)
+        # print(words, nouns)
         return nouns
+
+    def showGraph(self):
+        dict = {}
+        for sentense in self.sentences:
+            for i in sentense.nouns:
+                for j in sentense.nouns[sentense.nouns.index(i):]:
+                    if i==j:
+                        continue
+                    if (i,j) not in dict and (j,i) not in dict:
+                        dict[(i,j)] = []
+                        dict[(i, j)].append(sentense.id + 1)
+                    elif (i,j) in dict:
+                        dict[(i, j)].append(sentense.id + 1)
+                    else:
+                        dict[(j, i)].append(sentense.id + 1)
+
+        G = nx.Graph()
+        labels = {}
+        for e, p in dict.items():
+            G.add_edge(*e)
+            labels[e] = str(p)
+
+        pos = nx.spring_layout(G)
+
+        nx.draw(G, pos, with_labels=True, node_size=20,
+                             node_color='black',
+                             font_size=10,
+                             font_color='red'
+                )
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, font_size=10)
+
+        plt.show()
+    # пошла жара, определяем что где есть)
 
     def search_sequence(self, sentence, sequence):
         j = 0
@@ -174,9 +155,6 @@ class Chapter:
                     for_delete.append(i)
                 else:
                     changes[i].append(word)
-
-            # for j in change_to_nomn:
-            #     words[0][j] = words[0][j].inflect({'nomn'})
 
             if len(words[1]) > 0:
                 case = words[1][0].tag.case
